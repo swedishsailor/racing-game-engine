@@ -9,6 +9,23 @@ Part 16
 //"use strict";
 //console.log("Strict mode is on!");
 
+/**
+ * WebSocket connection
+ * It will be in another file soon (probably)
+ */
+const socket = io("http://localhost:8082");
+
+
+socket.on("open", ()=>console.log("%c You are connected to the server", 'color: #bada55'))
+socket.on("init", handleInit)
+
+function handleInit(msg){
+    console.log(msg);
+}
+
+/**
+ * The Game
+ */
 // required canvas variables (using ctx instead of canvasContext)
 var canvas;
 var ctx;
