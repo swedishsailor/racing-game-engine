@@ -14,8 +14,8 @@ function enemyCarClass() {
 
     this.carImage;   // Don't assign nothing, use undefined going forward.
     this.name = "enemy";
-    this.car_x_position = 50;
-    this.car_y_position = 50;
+    this.x = 50;
+    this.y = 50;
     this.carAngle = 0;
 
     this.spawnCar = function(whichImage, playerName) {
@@ -24,13 +24,13 @@ function enemyCarClass() {
     };
 
     this.setCarVariables = function(x, y, a) {
-        this.car_x_position = x;
-        this.car_y_position = y;
+        this.x = x;
+        this.y = y;
         this.carAngle = a;
     }
 
     this.drawCar = function() {
-        makeCenteredImageRotate(this.carImage, this.car_x_position, this.car_y_position, this.carAngle);
+        makeCenteredImageRotate(this.carImage, this.x, this.y, this.carAngle);
     };
 }
 
@@ -52,8 +52,8 @@ function carClass() {
     // car image, name, x & y position, angle, and speed variables
     this.carImage = undefined;   // Don't assign nothing, use undefined going forward.
     this.name = "unNamed";
-    this.car_x_position = 50;
-    this.car_y_position = 50;
+    this.x = 50;
+    this.y = 50;
     this.carAngle = 0;
     this.car_speed = 0;
     
@@ -104,9 +104,9 @@ function carClass() {
                 this.carAngle -= TURNING_RATE;
             }
         }
-        this.car_x_position += Math.cos(this.carAngle) * this.car_speed;
-        this.car_y_position += Math.sin(this.carAngle) * this.car_speed;
-        sendPlayerInfoToServer(this.car_x_position, this.car_y_position, this.carAngle);
+        this.x += Math.cos(this.carAngle) * this.car_speed;
+        this.y += Math.sin(this.carAngle) * this.car_speed;
+        sendPlayerInfoToServer(this.x, this.y, this.carAngle);
     };
  
     function sendPlayerInfoToServer(x,y,a) {
@@ -116,7 +116,7 @@ function carClass() {
     
     // call the function with needed arguments for car placement and rotation
     this.drawCar = function() {
-        makeCenteredImageRotate(this.carImage, this.car_x_position, this.car_y_position, this.carAngle);
+        makeCenteredImageRotate(this.carImage, this.x, this.y, this.carAngle);
     };
 }  // END OF CAR CLASS
 
@@ -247,10 +247,10 @@ function drawAllElements() {
     //draw all messages
     for (id in playerMessages){
         if(id != socketId){
-            ctx.fillText(playerMessages[id], enemyPlayers[id].car_x_position, enemyPlayers[id].car_y_position);
+            ctx.fillText(playerMessages[id], enemyPlayers[id].x, enemyPlayers[id].y);
         }
         else{
-            ctx.fillText(playerMessages[id], player.car_x_position, player.car_y_position);
+            ctx.fillText(playerMessages[id], player.x, player.y);
         }
 
     }
