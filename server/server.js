@@ -59,6 +59,12 @@ io.on('connection', (sock) => {
     }
   })
 
+  sock.on('playerMessage', (message) => {
+    console.log(sock.id);
+    var id = sock.id;
+    io.emit('playerMessage', ({message, id}));
+  })
+
   //wysylay info do klientow wszystkich kogo wyjebalo
   //i go na klientach usuwamy, na serwerze tez usuwamy goscia
   sock.on('disconnect', function() {
