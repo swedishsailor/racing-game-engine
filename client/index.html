@@ -8,9 +8,12 @@ Sorry, the web browser you are using doesn't support canvas elements!
 <button  onclick="sendMessageToAll()">Say</button>
 
 <script src="/socket.io/socket.io.js"></script>
-<script src="src/client.js"></script>
+<script type="module" src="src/client.js"></script>
 <style>
 canvas {
     border: 3px dotted black;
+  }
+  html{
+    background: rgb(61, 61, 61);
   }
 </style>

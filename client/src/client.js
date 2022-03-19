@@ -1,5 +1,7 @@
 /*jshint esversion: 6 */
 
+import { prepareMap } from "./map.js";
+
 const ONE_SECOND = 1000;
 
 var canvas;
@@ -18,24 +20,24 @@ function enemyCarClass() {
     this.y = 50;
     this.carAngle = 0;
 
-    this.spawnCar = function(whichImage, playerName) {
+    this.spawnCar = function (whichImage, playerName) {
         this.carImage = whichImage;
         this.name = playerName;
     };
 
-    this.setCarVariables = function(x, y, a) {
+    this.setCarVariables = function (x, y, a) {
         this.x = x;
         this.y = y;
         this.carAngle = a;
     }
 
-    this.drawCar = function() {
+    this.drawCar = function () {
         makeCenteredImageRotate(this.carImage, this.x, this.y, this.carAngle);
     };
 }
 
 function carClass() {
-  
+
     // constants for car direction
     const CAR_START_NORTH = -90;
     const CAR_START_SOUTH = 90;
@@ -48,7 +50,7 @@ function carClass() {
     const REVERSE_RATE = 0.2;
     const TURNING_RATE = 0.05;
     const MINIMUM_SPEED_TO_TURN = 0.4;
-    
+
     // car image, name, x & y position, angle, and speed variables
     this.carImage = undefined;   // Don't assign nothing, use undefined going forward.
     this.name = "unNamed";
@@ -56,51 +58,51 @@ function carClass() {
     this.y = 50;
     this.carAngle = 0;
     this.car_speed = 0;
-    
+
     // keyHeldDown variables with booleans
     this.keyHeldDown_Forward = false;
     this.keyHeldDown_Reverse = false;
     this.keyHeldDown_Right = false;
     this.keyHeldDown_Left = false;
-    
+
     // create generic control keys properties that we can assign specific keys to at set up.
     this.controlKeyForward = undefined;
     this.controlKeyReverse = undefined;
     this.controlKeyRight = undefined;
     this.controlKeyLeft = undefined;
-        
+
     // this setup function will assign different keyboard keys to each car
-    this.setKeyboardKeys = function(forward, reverse, right, left) {
+    this.setKeyboardKeys = function (forward, reverse, right, left) {
         this.controlKeyForward = forward;
         this.controlKeyReverse = reverse;
         this.controlKeyRight = right;
         this.controlKeyLeft = left;
     };
-    
+
     // function to reset the car at start
-    this.resetCar = function(whichImage, playerName) {
+    this.resetCar = function (whichImage, playerName) {
         this.carImage = whichImage;
         this.name = playerName;
         this.car_speed = 0;
         console.log("No " + playerName + " starting point found!");
     };
-    
+
     // calculates next car position on setInterval cycle.
-    this.calculateNextCarPosition = function() {
+    this.calculateNextCarPosition = function () {
         // slow the car as it coasts to approximate friction
         this.car_speed *= ROAD_FRICTION;
-    
-        if(this.keyHeldDown_Forward) {
+
+        if (this.keyHeldDown_Forward) {
             this.car_speed += FORWARD_RATE;
         }
-        if(this.keyHeldDown_Reverse) {
+        if (this.keyHeldDown_Reverse) {
             this.car_speed -= REVERSE_RATE;
         }
-        if(Math.abs(this.car_speed) > MINIMUM_SPEED_TO_TURN) {
-            if(this.keyHeldDown_Right) {
+        if (Math.abs(this.car_speed) > MINIMUM_SPEED_TO_TURN) {
+            if (this.keyHeldDown_Right) {
                 this.carAngle += TURNING_RATE;
             }
-            if(this.keyHeldDown_Left) {
+            if (this.keyHeldDown_Left) {
                 this.carAngle -= TURNING_RATE;
             }
         }
@@ -108,14 +110,14 @@ function carClass() {
         this.y += Math.sin(this.carAngle) * this.car_speed;
         sendPlayerInfoToServer(this.x, this.y, this.carAngle);
     };
- 
-    function sendPlayerInfoToServer(x,y,a) {
-        sock.emit('PlayerInfo',{ x, y, a});
+
+    function sendPlayerInfoToServer(x, y, a) {
+        sock.emit('PlayerInfo', { x, y, a });
     }
 
-    
+
     // call the function with needed arguments for car placement and rotation
-    this.drawCar = function() {
+    this.drawCar = function () {
         makeCenteredImageRotate(this.carImage, this.x, this.y, this.carAngle);
     };
 }  // END OF CAR CLASS
@@ -123,7 +125,7 @@ function carClass() {
 // Car image variables
 var carImage2 = document.createElement("img");
 var carImage1 = document.createElement('img');
-               
+
 // arrow key codes as constants
 const ARROW_KEY_UP = 38;
 const ARROW_KEY_DOWN = 40;
@@ -132,16 +134,16 @@ const ARROW_KEY_LEFT = 37;
 
 // function to actually set up control keys for each car
 function carControlKeySetup(keyEvent, whichCar, bindToThisKey) {
-    if(keyEvent.keyCode === whichCar.controlKeyForward) {
+    if (keyEvent.keyCode === whichCar.controlKeyForward) {
         whichCar.keyHeldDown_Forward = bindToThisKey;
     }
-    if(keyEvent.keyCode === whichCar.controlKeyReverse) {
+    if (keyEvent.keyCode === whichCar.controlKeyReverse) {
         whichCar.keyHeldDown_Reverse = bindToThisKey;
     }
-    if(keyEvent.keyCode === whichCar.controlKeyRight) {
+    if (keyEvent.keyCode === whichCar.controlKeyRight) {
         whichCar.keyHeldDown_Right = bindToThisKey;
     }
-    if(keyEvent.keyCode === whichCar.controlKeyLeft) {
+    if (keyEvent.keyCode === whichCar.controlKeyLeft) {
         whichCar.keyHeldDown_Left = bindToThisKey;
     }
 }
@@ -150,9 +152,9 @@ function carControlKeySetup(keyEvent, whichCar, bindToThisKey) {
 function keyIsPressed(keyEvent) {
     //console.log("Key Pressed: " + keyEvent.keyCode);
     carControlKeySetup(keyEvent, player, true);
-    
-   //możliwe ze bedzie trzeba handlowac jakos pisanie lepiej
-   //bo moze kolidowac ze sterowaniem tutaj ale zobaczymy
+
+    //możliwe ze bedzie trzeba handlowac jakos pisanie lepiej
+    //bo moze kolidowac ze sterowaniem tutaj ale zobaczymy
 }
 
 // function runs when we release a key that was held down
@@ -162,7 +164,7 @@ function keyIsLetUp(keyEvent) {
 }
 
 function sendMessageToAll() {
-    if (playerText.value != ""){
+    if (playerText.value != "") {
         sock.emit('playerMessage', playerText.value);
     }
 }
@@ -176,16 +178,16 @@ function loadStartMapLevel() {
 // function which will load the map level and cars
 // A list array of custom bitmap image object literals
 var bitmapImageList =
-    [ 
-      {varName: carImage1, imageSource: "../img/f1.png"},
-      {varName: carImage2, imageSource: "../img/f2.png"},
+    [
+        { varName: carImage1, imageSource: "../img/f1.png" },
+        { varName: carImage2, imageSource: "../img/f2.png" },
     ];
 
 // function which handles loading of all graphic images in a list
 function loadAllBitmapGraphics(bitmapList) {
-    for(var i = 0; i < bitmapList.length; i++) {
+    for (var i = 0; i < bitmapList.length; i++) {
         // varName property is used for car images, logos and misc stuff
-        if(bitmapList[i].varName !== undefined){
+        if (bitmapList[i].varName !== undefined) {
             bitmapList[i].varName.src = bitmapList[i].imageSource;
         }
     }
@@ -199,33 +201,33 @@ window.onload = function () {
     canvas = document.getElementById("myCanvas");
     ctx = canvas.getContext("2d");
     ctx.font = "30px Arial";
-    
-    playerText = document.getElementById("playerText")
+
+    var playerText = document.getElementById("playerText")
     // calls our function to run at 30 fps
     var framesPerSecond = 60;
-    setInterval(function() {
+    setInterval(function () {
         calculateNextPosition();
         drawAllElements();
-        }, 1000 / framesPerSecond); 
-    
+    }, 1000 / framesPerSecond);
+
     // event listener for a key press down and hold
     document.addEventListener("keydown", keyIsPressed);
 
     // event listener for release of a key that was held down
     document.addEventListener("keyup", keyIsLetUp);
-    
+
     // call the loadMapLevel function to set up the map and car positions prior to game start.    
     loadStartMapLevel();
-  
+
     // function call to load all bitmap graphics
     loadAllBitmapGraphics(bitmapImageList);
-   
+
     // assign control keys to player1 and player
     player.setKeyboardKeys(ARROW_KEY_UP, ARROW_KEY_DOWN, ARROW_KEY_RIGHT, ARROW_KEY_LEFT);
 };
 
 // calculates the next car position for each player car including collisions
-function calculateNextPosition() {    
+function calculateNextPosition() {
     player.calculateNextCarPosition();
 }
 
@@ -236,20 +238,20 @@ function colRowToArrayIndex(col, row) {
 
 function drawAllElements() {
     ctx.save();
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    //ctx.clearRect(0, 0, canvas.width, canvas.height);  PAMIETAJ O TYM
     player.drawCar();
 
     //draw all enemies
-    for (enemy in enemyPlayers){
+    for (enemy in enemyPlayers) {
         enemyPlayers[enemy].drawCar();
     }
 
     //draw all messages
-    for (id in playerMessages){
-        if(id != socketId){
+    for (id in playerMessages) {
+        if (id != socketId) {
             ctx.fillText(playerMessages[id], enemyPlayers[id].x, enemyPlayers[id].y);
         }
-        else{
+        else {
             ctx.fillText(playerMessages[id], player.x, player.y);
         }
 
@@ -262,10 +264,10 @@ function makeCenteredImageRotate(myImage, posX, posY, atAngle) {
     ctx.save();
     ctx.translate(posX, posY);
     ctx.rotate(atAngle);
-    ctx.drawImage(myImage, -myImage.width/2, -myImage.height/2);
+    ctx.drawImage(myImage, -myImage.width / 2, -myImage.height / 2);
     // when function done and returns, return the canvas back to original state
     ctx.restore();
-   
+
 }
 
 //tutaj logika gadania z serwerem
@@ -274,29 +276,41 @@ function makeCenteredImageRotate(myImage, posX, posY, atAngle) {
         socketId = id;
         console.log("Moje id to: ", socketId);
     });
-  
+
     sock.on('message', (text) => console.log(text));
 
     sock.on('newPlayer', (id) => {
         //spawn new player
         console.log('enemy player joined');
-        var enemyPlayer = new enemyCarClass(); 
-        enemyPlayers[id] = enemyPlayer;     
+        var enemyPlayer = new enemyCarClass();
+        enemyPlayers[id] = enemyPlayer;
         enemyPlayers[id].spawnCar(carImage2, "Enemy");
-        enemyPlayers[id].setCarVariables(50,50,0); 
+        enemyPlayers[id].setCarVariables(50, 50, 0);
     });
 
-    sock.on('enemyPlayerInfo', ({x, y, a, myId}) => {
+    sock.on('enemyPlayerInfo', ({ x, y, a, myId }) => {
         //update enemy player info
-        enemyPlayers[myId].setCarVariables(x,y,a);
+        enemyPlayers[myId].setCarVariables(x, y, a);
     })
 
-    sock.on('playerMessage', ({message, id}) => {
+    sock.on('playerMessage', ({ message, id }) => {
         playerMessages[id] = message;
         setTimeout(() => {
-          delete playerMessages[id];
+            delete playerMessages[id];
         }, ONE_SECOND * 3);
     })
-    
+
     sock.on('enemyDisconnected', (id) => delete enemyPlayers[id])
 })();
+
+// This func was created to make code less messy 
+export const drawCircle = (x, y, radius, startAngle, rotation) => {
+    ctx.lineWidth = 80;
+    ctx.beginPath();
+    ctx.arc(x, y, radius, startAngle, rotation)
+    ctx.stroke();
+}
+
+setTimeout(() => {
+    prepareMap(ctx);
+}, 0)
