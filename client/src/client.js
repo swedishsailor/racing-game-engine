@@ -1,6 +1,6 @@
 /*jshint esversion: 6 */
 
-import { prepareMap } from "./map.js";
+import { calculateMapHitboxes, prepareMap } from "./map.js";
 
 const ONE_SECOND = 1000;
 
@@ -305,7 +305,7 @@ function makeCenteredImageRotate(myImage, posX, posY, atAngle) {
 
 // This func was created to make code less messy 
 export const drawCircle = (x, y, radius, startAngle, rotation) => {
-    ctx.lineWidth = 80;
+    ctx.lineWidth = 100;
     ctx.beginPath();
     ctx.arc(x, y, radius, startAngle, rotation)
     ctx.stroke();
@@ -313,4 +313,5 @@ export const drawCircle = (x, y, radius, startAngle, rotation) => {
 
 setTimeout(() => {
     prepareMap(ctx);
+    calculateMapHitboxes(ctx);
 }, 0)
