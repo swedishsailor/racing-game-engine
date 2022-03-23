@@ -1,6 +1,6 @@
 /*jshint esversion: 6 */
 
-import { calculateMapHitboxes, prepareMap } from "./map.js";
+import { calculateMapHitboxes, prepareMap, proceduralPattern } from "./map.js";
 
 const ONE_SECOND = 1000;
 
@@ -311,7 +311,8 @@ export const drawCircle = (x, y, radius, startAngle, rotation) => {
     ctx.stroke();
 }
 
+const pattern = [41, 21, 5, 41, 21, 5, 5, 5, 5, 5, 11, 31, 5, 5, 5, 5, 5, 5, 5, 5, 41, 6, 6, 6, 21, 41, 12, 7, 7, 7, 7, 7, 22, 42, 7, 7, 7, 7, 32, 6, 6, 6, 21, 41, 6]
 setTimeout(() => {
-    prepareMap(ctx);
+    prepareMap(ctx, proceduralPattern(14));
     calculateMapHitboxes(ctx);
 }, 0)
