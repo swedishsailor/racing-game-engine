@@ -1,6 +1,6 @@
 /*jshint esversion: 6 */
 
-import { calculateMapHitboxes, prepareMap, proceduralPattern, proceduralQuartPattern, rollFirstPoint } from "./map.js";
+import { calculateMapHitboxes, createPattern, prepareMap, proceduralPattern, proceduralQuartPattern, rollFirstPoint } from "./map.js";
 
 const ONE_SECOND = 1000;
 
@@ -317,7 +317,7 @@ setTimeout(() => {
 
     //prepareMap(ctx, proceduralPattern(8), rollFirstPoint(canvas), 100);
     const firstPoint = rollFirstPoint(canvas);
-    const pattern = proceduralQuartPattern(ctx, canvas, firstPoint);
+    const pattern = createPattern(ctx, canvas, firstPoint);
     prepareMap(ctx, pattern, firstPoint, 110);
 
     console.log(rollFirstPoint(canvas))
