@@ -1,6 +1,6 @@
 /*jshint esversion: 6 */
 
-import { calculateMapHitboxes, prepareMap, proceduralPattern } from "./map.js";
+import { calculateMapHitboxes, prepareMap, proceduralPattern, proceduralQuartPattern, rollFirstPoint } from "./map.js";
 
 const ONE_SECOND = 1000;
 
@@ -305,7 +305,7 @@ function makeCenteredImageRotate(myImage, posX, posY, atAngle) {
 
 // This func was created to make code less messy 
 export const drawCircle = (x, y, radius, startAngle, rotation) => {
-    ctx.lineWidth = 100;
+    ctx.lineWidth = 110;
     ctx.beginPath();
     ctx.arc(x, y, radius, startAngle, rotation)
     ctx.stroke();
@@ -313,6 +313,13 @@ export const drawCircle = (x, y, radius, startAngle, rotation) => {
 
 const pattern = [41, 21, 5, 41, 21, 5, 5, 5, 5, 5, 11, 31, 5, 5, 5, 5, 5, 5, 5, 5, 41, 6, 6, 6, 21, 41, 12, 7, 7, 7, 7, 7, 22, 42, 7, 7, 7, 7, 32, 6, 6, 6, 21, 41, 6]
 setTimeout(() => {
-    prepareMap(ctx, proceduralPattern(14));
+    //prepareMap(ctx, proceduralQuartPattern(canvas, 'quart1',10), rollFirstPoint(canvas), 100)
+
+    //prepareMap(ctx, proceduralPattern(8), rollFirstPoint(canvas), 100);
+    const firstPoint = rollFirstPoint(canvas);
+    const pattern = proceduralQuartPattern(ctx, canvas, firstPoint);
+    prepareMap(ctx, pattern, firstPoint, 110);
+
+    console.log(rollFirstPoint(canvas))
     calculateMapHitboxes(ctx);
 }, 0)
