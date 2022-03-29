@@ -320,6 +320,5 @@ setTimeout(() => {
     const pattern = createPattern(ctx, canvas, firstPoint);
     prepareMap(ctx, pattern, firstPoint, 110);
 
-    console.log(rollFirstPoint(canvas))
     calculateMapHitboxes(ctx);
 }, 0)
