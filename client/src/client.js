@@ -1,6 +1,6 @@
 /*jshint esversion: 6 */
 
-import { calculateMapHitboxes, createPattern, prepareMap, proceduralPattern, proceduralQuartPattern, rollFirstPoint } from "./map.js";
+import { calculateMapHitboxes, createPattern, drawMap, rollFirstPoint } from "./map.js";
 
 const ONE_SECOND = 1000;
 
@@ -199,6 +199,8 @@ var player = new carClass();
 // function which initially runs only after all the code has loaded into memory
 window.onload = function () {
     canvas = document.getElementById("myCanvas");
+    canvas.width = 1600;
+    canvas.height = 850;
     ctx = canvas.getContext("2d");
     ctx.font = "30px Arial";
 
@@ -313,12 +315,12 @@ export const drawCircle = (x, y, radius, startAngle, rotation) => {
 
 const pattern = [41, 21, 5, 41, 21, 5, 5, 5, 5, 5, 11, 31, 5, 5, 5, 5, 5, 5, 5, 5, 41, 6, 6, 6, 21, 41, 12, 7, 7, 7, 7, 7, 22, 42, 7, 7, 7, 7, 32, 6, 6, 6, 21, 41, 6]
 setTimeout(() => {
-    //prepareMap(ctx, proceduralQuartPattern(canvas, 'quart1',10), rollFirstPoint(canvas), 100)
+    //drawMap(ctx, proceduralQuartPattern(canvas, 'quart1',10), rollFirstPoint(canvas), 100)
 
-    //prepareMap(ctx, proceduralPattern(8), rollFirstPoint(canvas), 100);
+    //drawMap(ctx, proceduralPattern(8), rollFirstPoint(canvas), 100);
     const firstPoint = rollFirstPoint(canvas);
     const pattern = createPattern(ctx, canvas, firstPoint);
-    prepareMap(ctx, pattern, firstPoint, 110);
+    drawMap(ctx, pattern, firstPoint, 110);
 
     calculateMapHitboxes(ctx);
 }, 0)

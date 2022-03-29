@@ -1,11 +1,29 @@
 import { drawCircle } from "./client.js";
 
 // Radius of curves -> REMEMBER if you change radius dont forget to change lineWidth in client.js
-const radius = 80;
+const radius = 90;
 // Array with all the hitbox/way drawing coords
 const coords = [];
+let element42Counter = 0;
+let element7Counter = 0;
+let element31Counter = 0;
+let element8Counter = 0;
+let element5Counter = 0;
+let element6Counter = 0;
+let element11Counter = 0;
+let element12Counter = 0;
+let element22Counter = 0;
+let element21Counter = 0;
+let element32Counter = 0;
 
-function matchElements(ctx, coords, thisPattern, previousPattern, previousPatternX, previousPatternY) {
+let quart1Coords = [8]; // Define the first pattern element to be 8 to make map BIGGER but not TOO BUGGED (map shouldn't be big enough to go out of canvas)
+let quart2Coords = []; // The rest are the Pattern Arrays for each QUART functions
+let quart3Coords = [];
+let quart4Coords = [];
+let POS_COORDS = [];
+let posCoordsLength; // This variables is used to define the length of POS_CORDS at the start of each pattern creating function
+
+function createPositionOfPatternElement(ctx, coords, thisPattern, previousPattern, previousPatternX, previousPatternY) {
     // PATTERN 1 - South East
     if (thisPattern === 11) {
         if (previousPattern === 5) {
@@ -215,7 +233,7 @@ function matchElements(ctx, coords, thisPattern, previousPattern, previousPatter
     }
 }
 
-export function prepareMap(ctx, pattern, firstElemPos, lineWidth) {
+export function drawMap(ctx, pattern, firstElemPos, lineWidth) {
     // Quarters positions in circle drawining -> [translatiom, startAngle, rotation]
     const quarter = [[0, Math.PI / 2, 0], [Math.PI / 2, Math.PI / 2 + Math.PI / 2, 0], [Math.PI, Math.PI / 2 + Math.PI, radius],
     [Math.PI * 3 / 2, Math.PI / 2 + Math.PI * 3 / 2, radius]]
@@ -224,10 +242,10 @@ export function prepareMap(ctx, pattern, firstElemPos, lineWidth) {
     2 - south west quart                    
     3 - north west quart                        https://i.postimg.cc/MG1NBMzy/infografika.png
     4 - north east quart
-    5 - right line
-    6 - bottom line */
-
-    //const pattern = [22,8, 31]
+    5 - line to right
+    6 - line to bottom
+    7 - line to left
+    8 - line to top */
     // Drawing the road and correcting offsets
     for (let i = 0; i < pattern.length; i++) {
         // First Element IT DETERMINES WHERE THE WAY SHOULD START DRAWING
@@ -243,7 +261,6 @@ export function prepareMap(ctx, pattern, firstElemPos, lineWidth) {
             const previousPattern = pattern[i - 1];
             const previousPatternX = coords[i - 1][0];
             const previousPatternY = coords[i - 1][1];
-
             // PATTERN 1 - South East
             if (thisPattern === 11) {
                 if (previousPattern === 5) {
@@ -510,11 +527,6 @@ export function prepareMap(ctx, pattern, firstElemPos, lineWidth) {
     console.log(coords)
 }
 
-
-function getPoint(c1, c2, radius, angle) {
-    return [c1 + Math.cos(angle) * radius, c2 + Math.sin(angle) * radius];
-}
-
 // Show the visual representation of ingame map hitboxes
 export function calculateMapHitboxes(ctx) {
     //console.log(getPoint(coords[0][0], coords[0][1], radius, Math.PI / 2))
@@ -536,149 +548,19 @@ export function calculateMapHitboxes(ctx) {
             element[1] -= radius;
         } else if (tag === 'seR') {
             element[1] += radius;
-
         } else if (tag === 'swR') {
             element[1] -= radius / 2;
             element[0] -= radius;
         }
         // Drawing circles of Hitboxes
-
-
         ctx.beginPath();
         ctx.arc(element[0], element[1], 10, 0, Math.PI * 2);
         ctx.fillStyle = 'red';
         ctx.fill();
-
     })
 }
-
-
-export const proceduralPattern = (numberOfElements) => {
-    const arr = [];
-    for (let i = 0; i < numberOfElements; i++) {
-        const previousElement = arr[i - 1];
-        if (i === 0) {
-            arr.push(8);
-        } else if (i > 0) {
-            if (previousElement === 41) {
-                switch (Math.floor(Math.random() * 3 + 1)) {
-                    case 1: arr.push(12)
-                        break;
-                    case 2: arr.push(21)
-                        break;
-                    case 3: arr.push(6)
-                        break;
-                }
-            } else if (previousElement === 31) {
-                switch (Math.floor(Math.random() * 3 + 1)) {
-                    case 1: arr.push(41)
-                        break;
-                    case 2: arr.push(11)
-                        break;
-                    case 3: arr.push(5)
-                        break;
-                }
-            } else if (previousElement === 21) {
-                switch (Math.floor(Math.random() * 3 + 1)) {
-                    case 1: arr.push(41)
-                        break;
-                    case 2: arr.push(11)
-                        break;
-                    case 3: arr.push(5)
-                        break;
-                }
-            } else if (previousElement === 11) {
-                switch (Math.floor(Math.random() * 3 + 1)) {
-                    case 1: arr.push(31)
-                        break;
-                    case 2: arr.push(42)
-                        break;
-                    case 3: arr.push(8)
-                        break;
-                }
-            } else if (previousElement === 42) {
-                switch (Math.floor(Math.random() * 3 + 1)) {
-                    case 1: arr.push(32)
-                        break;
-                    case 2: arr.push(22)
-                        break;
-                    case 3: arr.push(7)
-                        break;
-                }
-            } else if (previousElement === 32) {
-                switch (Math.floor(Math.random() * 3 + 1)) {
-                    case 1: arr.push(21)
-                        break;
-                    case 2: arr.push(12)
-                        break;
-                    case 3: arr.push(6)
-                        break;
-                }
-            } else if (previousElement === 22) {
-                switch (Math.floor(Math.random() * 3 + 1)) {
-                    case 1: arr.push(42)
-                        break;
-                    case 2: arr.push(31)
-                        break;
-                    case 3: arr.push(8)
-                        break;
-                }
-            } else if (previousElement === 12) {
-                switch (Math.floor(Math.random() * 3 + 1)) {
-                    case 1: arr.push(32)
-                        break;
-                    case 2: arr.push(22)
-                        break;
-                    case 3: arr.push(7)
-                        break;
-                }
-            }
-            else if (previousElement === 5) {
-                switch (Math.floor(Math.random() * 3 + 1)) {
-                    case 1: arr.push(41)
-                        break;
-                    case 2: arr.push(11)
-                        break;
-                    case 3: arr.push(5)
-                        break;
-                }
-            } else if (previousElement === 6) {
-                switch (Math.floor(Math.random() * 3 + 1)) {
-                    case 1: arr.push(21)
-                        break;
-                    case 2: arr.push(12)
-                        break;
-                    case 3: arr.push(6)
-                        break;
-                }
-            }
-            else if (previousElement === 7) {
-                switch (Math.floor(Math.random() * 3 + 1)) {
-                    case 1: arr.push(32)
-                        break;
-                    case 2: arr.push(22)
-                        break;
-                    case 3: arr.push(7)
-                        break;
-                }
-            }
-            else if (previousElement === 8) {
-                switch (Math.floor(Math.random() * 3 + 1)) {
-                    case 1: arr.push(31)
-                        break;
-                    case 2: arr.push(42)
-                        break;
-                    case 3: arr.push(8)
-                        break;
-                }
-            }
-        }
-    }
-    console.log(arr)
-    return arr;
-}
 // Temaplate of rolling a random pattern element
-const rollSingleElement = (parrentArray, case1, case2, case3) => {
+const rollSinglePatternElement = (parrentArray, case1, case2, case3) => {
     switch (Math.floor(Math.random() * 3 + 1)) {
         case 1: parrentArray.push(case1)
             break;
@@ -688,70 +570,54 @@ const rollSingleElement = (parrentArray, case1, case2, case3) => {
             break;
     }
 }
-
 // Roll the start of drawing map
 export const rollFirstPoint = (canvas) => {
-    const quart1 = { x: [0, canvas.height / 2], y: [0, canvas.width / 2] };
-    return { x: Math.floor((Math.random() * canvas.height / 2 + 10) + 1), y: canvas.height / 2 }
+    return { x: Math.floor((Math.random() * canvas.height / 2 + radius/2) + 1), y: canvas.height / 2 }
 }
-const rollNewElement = (previousElement, parrentArray) => {
+const rollNewPatternElement = (previousElement, parrentArray) => {
     if (previousElement === 41) {
-        rollSingleElement(parrentArray, 12, 21, 6)
+        rollSinglePatternElement(parrentArray, 12, 21, 6)
     } else if (previousElement === 31) {
-        rollSingleElement(parrentArray, 41, 11, 5)
+        rollSinglePatternElement(parrentArray, 41, 11, 5)
     } else if (previousElement === 21) {
-        rollSingleElement(parrentArray, 41, 11, 5)
+        rollSinglePatternElement(parrentArray, 41, 11, 5)
     } else if (previousElement === 11) {
-        rollSingleElement(parrentArray, 31, 42, 8)
+        rollSinglePatternElement(parrentArray, 31, 42, 8)
     } else if (previousElement === 42) {
-        rollSingleElement(parrentArray, 32, 22, 7)
+        rollSinglePatternElement(parrentArray, 32, 22, 7)
     } else if (previousElement === 32) {
-        rollSingleElement(parrentArray, 21, 12, 6)
+        rollSinglePatternElement(parrentArray, 21, 12, 6)
     } else if (previousElement === 22) {
-        rollSingleElement(parrentArray, 42, 31, 8)
+        rollSinglePatternElement(parrentArray, 42, 31, 8)
     } else if (previousElement === 12) {
-        rollSingleElement(parrentArray, 32, 22, 7)
+        rollSinglePatternElement(parrentArray, 32, 22, 7)
     } else if (previousElement === 5) {
-        rollSingleElement(parrentArray, 41, 11, 5)
+        rollSinglePatternElement(parrentArray, 41, 11, 5)
     } else if (previousElement === 6) {
-        rollSingleElement(parrentArray, 21, 12, 6)
+        rollSinglePatternElement(parrentArray, 21, 12, 6)
     } else if (previousElement === 7) {
-        rollSingleElement(parrentArray, 32, 22, 7)
+        rollSinglePatternElement(parrentArray, 32, 22, 7)
     } else if (previousElement === 8) {
-        rollSingleElement(parrentArray, 31, 42, 8)
+        rollSinglePatternElement(parrentArray, 31, 42, 8)
     }
 }
-
-let element42Counter = 0;
-let element7Counter = 0;
-let element31Counter = 0;
-let element8Counter = 0;
-let element5Counter = 0;
-let element6Counter = 0;
-let element11Counter = 0;
-let element12Counter = 0;
-let element22Counter = 0;
-let element21Counter = 0;
-let element32Counter = 0;
-
-let pattern1IsReady = false;
-let pattern2IsReady = false;
-let pattern3IsReady = false;
-let pattern4IsReady = false;
-
-let quart1Coords = [8];
-let quart2Coords = [];
-let quart3Coords = [];
-let quart4Coords = [];
-let POS_COORDS = [];
- /** NORTH WEST PATTERN */
-export const proceduralQuartPattern = (ctx, canvas, firstPos) => {
+const getRidOfLastPatternElement = (quartArray) => {
+    quartArray.pop();
+    POS_COORDS.pop();
+}
+/**
+ * 
+ * BELOW FUNCTIONS CREATE PATTERN QUARTER BY QUARTER
+ * START OF CREATING IS FROM NORTH-WEST PATTERN CLOCKWISE
+ * 
+ */
+/** NORTH WEST PATTERN */
+export const proceduralNorthWestPattern = (ctx, canvas, firstPos) => {
     if (POS_COORDS.length === 0) {
         POS_COORDS.push([firstPos.x, firstPos.y - radius, 'start'])
     }
-
     const previousElement = quart1Coords[quart1Coords.length - 1]
-    rollNewElement(previousElement, quart1Coords)
+    rollNewPatternElement(previousElement, quart1Coords)
     if (quart1Coords[quart1Coords.length - 1] === 42) {
         element42Counter++;
     } else if (quart1Coords[quart1Coords.length - 1] === 7) {
@@ -763,61 +629,48 @@ export const proceduralQuartPattern = (ctx, canvas, firstPos) => {
     } else if (quart1Coords[quart1Coords.length - 1] === 6) {
         element6Counter++;
     }
-
-    matchElements(ctx, POS_COORDS, quart1Coords[quart1Coords.length - 1], quart1Coords[quart1Coords.length - 2], POS_COORDS[POS_COORDS.length - 1][0], POS_COORDS[POS_COORDS.length - 1][1])
-
+    createPositionOfPatternElement(ctx, POS_COORDS, quart1Coords[quart1Coords.length - 1], quart1Coords[quart1Coords.length - 2], POS_COORDS[POS_COORDS.length - 1][0], POS_COORDS[POS_COORDS.length - 1][1])
     if (element42Counter >= 1 && quart1Coords[quart1Coords.length - 1] === 42) {
-        quart1Coords.pop();
-        POS_COORDS.pop();
-        proceduralQuartPattern(ctx, canvas, firstPos)
+        getRidOfLastPatternElement(quart1Coords);
+        proceduralNorthWestPattern(ctx, canvas, firstPos)
     } else if (element7Counter >= 1 && quart1Coords[quart1Coords.length - 1] === 7) {
-        POS_COORDS.pop();
-        quart1Coords.pop();
-        proceduralQuartPattern(ctx, canvas, firstPos)
+        getRidOfLastPatternElement(quart1Coords);
+        proceduralNorthWestPattern(ctx, canvas, firstPos)
     } else if (element8Counter >= 2 && quart1Coords[quart1Coords.length - 1] === 8) {
-        POS_COORDS.pop();
-        quart1Coords.pop();
-        proceduralQuartPattern(ctx, canvas, firstPos)
+        getRidOfLastPatternElement(quart1Coords);
+        proceduralNorthWestPattern(ctx, canvas, firstPos)
     } else if (element8Counter >= 1 && quart1Coords[quart1Coords.length - 1] === 6) {
-        POS_COORDS.pop();
-        quart1Coords.pop();
-        proceduralQuartPattern(ctx, canvas, firstPos)
+        getRidOfLastPatternElement(quart1Coords);
+        proceduralNorthWestPattern(ctx, canvas, firstPos)
     } else if (quart1Coords.length < 5 && quart1Coords[quart1Coords.length - 1] === 41) {
-        POS_COORDS.pop();
-        quart1Coords.pop();
-        proceduralQuartPattern(ctx, canvas, firstPos)
+        getRidOfLastPatternElement(quart1Coords);
+        proceduralNorthWestPattern(ctx, canvas, firstPos)
     }
-
     // If one element of pattern is not allowed, reset this func
-    if (POS_COORDS[POS_COORDS.length - 1][0] < 0 || POS_COORDS[POS_COORDS.length - 1][1] - radius / 2 < 0 || POS_COORDS[POS_COORDS.length - 1][1] > canvas.height / 2 - radius / 2) {
+    if (POS_COORDS[POS_COORDS.length - 1][0] < 0 || POS_COORDS[POS_COORDS.length - 1][1] - radius < 0 || POS_COORDS[POS_COORDS.length - 1][1] > canvas.height / 2 - radius / 2) {
         POS_COORDS = [POS_COORDS[0]];
         quart1Coords = [8];
         // Get rid of random deffects created by new coords transition
-        ctx.clearRect(0,0,canvas.width, canvas.height)
+        ctx.clearRect(0, 0, canvas.width, canvas.height)
         console.log('Reset patternu numer 1')
     }
-
     // Recursion conditiom
     if (POS_COORDS[POS_COORDS.length - 1][0] <= canvas.width / 2 && POS_COORDS.length < 26) {
-        proceduralQuartPattern(ctx, canvas, firstPos)
-    }else{
-        pattern1IsReady
+        proceduralNorthWestPattern(ctx, canvas, firstPos)
     }
     return quart1Coords
-}
+}// END OF NORTH WEST
 
-let posCoordsLength;
- /** NORTH EAST PATTERN */
+/** NORTH EAST PATTERN */
 const proceduralNorthEastPattern = (ctx, canvas, firstPos) => {
     if (quart2Coords.length === 0) {
-        element42Counter,element7Counter,element31Counter,element8Counter,element5Counter,element6Counter,element11Counter, element12Counter, element22Counter = 0;
+        element42Counter, element7Counter, element31Counter, element8Counter, element5Counter, element6Counter, element11Counter, element12Counter, element22Counter = 0;
         posCoordsLength = POS_COORDS.length;
-        rollNewElement(quart1Coords[quart1Coords.length-1],quart2Coords)
-        matchElements(ctx, POS_COORDS, quart2Coords[quart2Coords.length - 1], quart1Coords[quart1Coords.length - 1], POS_COORDS[POS_COORDS.length - 1][0], POS_COORDS[POS_COORDS.length - 1][1])
+        rollNewPatternElement(quart1Coords[quart1Coords.length - 1], quart2Coords)
+        createPositionOfPatternElement(ctx, POS_COORDS, quart2Coords[quart2Coords.length - 1], quart1Coords[quart1Coords.length - 1], POS_COORDS[POS_COORDS.length - 1][0], POS_COORDS[POS_COORDS.length - 1][1])
     }
-
     const previousElement = quart2Coords[quart2Coords.length - 1]
-    rollNewElement(previousElement, quart2Coords)
+    rollNewPatternElement(previousElement, quart2Coords)
     if (quart2Coords[quart2Coords.length - 1] === 11) {
         element11Counter++;
     } else if (quart2Coords[quart2Coords.length - 1] === 8) {
@@ -827,197 +680,135 @@ const proceduralNorthEastPattern = (ctx, canvas, firstPos) => {
     } else if (quart2Coords[quart2Coords.length - 1] === 22) {
         element22Counter++;
     }
-
-    matchElements(ctx, POS_COORDS, quart2Coords[quart2Coords.length - 1], quart2Coords[quart2Coords.length - 2], POS_COORDS[POS_COORDS.length - 1][0], POS_COORDS[POS_COORDS.length - 1][1])
-
+    createPositionOfPatternElement(ctx, POS_COORDS, quart2Coords[quart2Coords.length - 1], quart2Coords[quart2Coords.length - 2], POS_COORDS[POS_COORDS.length - 1][0], POS_COORDS[POS_COORDS.length - 1][1])
     if (element11Counter >= 1 && quart2Coords[quart2Coords.length - 1] === 11) {
-        quart2Coords.pop();
-        POS_COORDS.pop();
+        getRidOfLastPatternElement(quart2Coords);
         proceduralNorthEastPattern(ctx, canvas, firstPos)
     } else if (element8Counter >= 1 && quart2Coords[quart2Coords.length - 1] === 8) {
-        quart2Coords.pop();
-        POS_COORDS.pop();
+        getRidOfLastPatternElement(quart2Coords);
         proceduralNorthEastPattern(ctx, canvas, firstPos)
-    }else if (element42Counter >= 0 && quart2Coords[quart2Coords.length - 1] === 42) {
-        quart2Coords.pop();
-        POS_COORDS.pop();
+    } else if (element42Counter >= 0 && quart2Coords[quart2Coords.length - 1] === 42) {
+        getRidOfLastPatternElement(quart2Coords);
         proceduralNorthEastPattern(ctx, canvas, firstPos)
-    }else if (element22Counter >= 0 && quart2Coords[quart2Coords.length - 1] === 22) {
-        quart2Coords.pop();
-        POS_COORDS.pop();
+    } else if (element22Counter >= 0 && quart2Coords[quart2Coords.length - 1] === 22) {
+        getRidOfLastPatternElement(quart2Coords);
         proceduralNorthEastPattern(ctx, canvas, firstPos)
     }
-
     // If one element of pattern is not allowed, reset this func
-    if (POS_COORDS[POS_COORDS.length - 1][1] - radius < 0 || POS_COORDS[POS_COORDS.length - 1][0]  < canvas.width/2 - radius/2 || POS_COORDS[POS_COORDS.length - 1][0] + radius/2 > canvas.width) {
+    if (POS_COORDS[POS_COORDS.length - 1][1] - radius < 0 || POS_COORDS[POS_COORDS.length - 1][0] < canvas.width / 2 - radius / 2 || POS_COORDS[POS_COORDS.length - 1][0] + radius * 2/3 > canvas.width) {
         POS_COORDS.splice(posCoordsLength, POS_COORDS.length - posCoordsLength)
         quart2Coords = [];
         // Get rid of random deffects created by new coords transition
-        ctx.clearRect(0,0,canvas.width, canvas.height)
+        ctx.clearRect(0, 0, canvas.width, canvas.height)
         console.log('Reset patternu numer 2')
-        proceduralNorthEastPattern(ctx, canvas, firstPos)
     }
-
     // Recursion conditiom
-    if (POS_COORDS[POS_COORDS.length - 1][1] + radius<= canvas.height / 2 && POS_COORDS.length < posCoordsLength + 13) {
+    if (POS_COORDS[POS_COORDS.length - 1][1] + radius <= canvas.height / 2 && POS_COORDS.length < posCoordsLength + 13) {
         proceduralNorthEastPattern(ctx, canvas, firstPos)
     }
     return quart2Coords
-}
- /** SOUTH EAST PATTERN */
+}// END OF NORTH EAST
+
+/** SOUTH EAST PATTERN */
 const proceduralSouthEastPattern = (ctx, canvas, firstPos) => {
-
     if (quart3Coords.length === 0) {
-        element42Counter,element7Counter,element31Counter,element8Counter,element5Counter,element6Counter,element11Counter, element12Counter, element22Counter = 0;
+        element42Counter, element7Counter, element31Counter, element8Counter, element5Counter, element6Counter, element11Counter, element12Counter, element22Counter = 0;
         posCoordsLength = POS_COORDS.length;
-        rollNewElement(quart2Coords[quart2Coords.length-1],quart3Coords)
-        matchElements(ctx, POS_COORDS, quart3Coords[quart3Coords.length - 1], quart2Coords[quart2Coords.length - 1], POS_COORDS[POS_COORDS.length - 1][0], POS_COORDS[POS_COORDS.length - 1][1])
+        rollNewPatternElement(quart2Coords[quart2Coords.length - 1], quart3Coords)
+        createPositionOfPatternElement(ctx, POS_COORDS, quart3Coords[quart3Coords.length - 1], quart2Coords[quart2Coords.length - 1], POS_COORDS[POS_COORDS.length - 1][0], POS_COORDS[POS_COORDS.length - 1][1])
     }
-
     const previousElement = quart3Coords[quart3Coords.length - 1]
-    rollNewElement(previousElement, quart3Coords)
-    /*if (quart1Coords[quart1Coords.length - 1] === 42) {
-        element42Counter++;
-    } else if (quart1Coords[quart1Coords.length - 1] === 7) {
-        element7Counter++;
-    } else if (quart1Coords[quart1Coords.length - 1] === 31) {
-        element31Counter++;
-    } else if (quart1Coords[quart1Coords.length - 1] === 8) {
-        element8Counter++;
-    } */
+    rollNewPatternElement(previousElement, quart3Coords)
     if (quart3Coords[quart3Coords.length - 1] === 21) {
         element21Counter++;
-    }else if (quart3Coords[quart3Coords.length - 1] === 8) {
+    } else if (quart3Coords[quart3Coords.length - 1] === 8) {
         element8Counter++;
     }
-    matchElements(ctx, POS_COORDS, quart3Coords[quart3Coords.length - 1], quart3Coords[quart3Coords.length - 2], POS_COORDS[POS_COORDS.length - 1][0], POS_COORDS[POS_COORDS.length - 1][1])
-
+    createPositionOfPatternElement(ctx, POS_COORDS, quart3Coords[quart3Coords.length - 1], quart3Coords[quart3Coords.length - 2], POS_COORDS[POS_COORDS.length - 1][0], POS_COORDS[POS_COORDS.length - 1][1])
     if (element21Counter >= 1 && quart3Coords[quart3Coords.length - 1] === 21) {
-        quart3Coords.pop();
-        POS_COORDS.pop();
+        getRidOfLastPatternElement(quart3Coords)
         proceduralSouthEastPattern(ctx, canvas, firstPos)
-    }else if (element8Counter >= 1 && quart3Coords[quart3Coords.length - 1] === 8) {
-        quart3Coords.pop();
-        POS_COORDS.pop();
+    } else if (element8Counter >= 1 && quart3Coords[quart3Coords.length - 1] === 8) {
+        getRidOfLastPatternElement(quart3Coords)
         proceduralSouthEastPattern(ctx, canvas, firstPos)
     }
-    /*else if (element7Counter >= 1 && quart1Coords[quart1Coords.length - 1] === 7) {
-        POS_COORDS.pop();
-        quart1Coords.pop();
-        proceduralQuartPattern(ctx, canvas, firstPos)
-    } else if (element8Counter >= 2 && quart1Coords[quart1Coords.length - 1] === 8) {
-        POS_COORDS.pop();
-        quart1Coords.pop();
-        proceduralQuartPattern(ctx, canvas, firstPos)
-    } else if (element8Counter >= 1 && quart1Coords[quart1Coords.length - 1] === 6) {
-        POS_COORDS.pop();
-        quart1Coords.pop();
-        proceduralQuartPattern(ctx, canvas, firstPos)
-    } else if (quart1Coords.length < 5 && quart1Coords[quart1Coords.length - 1] === 41) {
-        POS_COORDS.pop();
-        quart1Coords.pop();
-        proceduralQuartPattern(ctx, canvas, firstPos)
-    }*/
-
     // If one element of pattern is not allowed, reset this func
-    if (POS_COORDS[POS_COORDS.length - 1][1]  + radius > canvas.height  || POS_COORDS[POS_COORDS.length - 1][0] - radius/2> canvas.width || POS_COORDS[POS_COORDS.length - 1][1]  <= canvas.height/2) {
+    if (POS_COORDS[POS_COORDS.length - 1][1] + radius > canvas.height || POS_COORDS[POS_COORDS.length - 1][0] - radius / 2 > canvas.width || POS_COORDS[POS_COORDS.length - 1][1] <= canvas.height / 2) {
         POS_COORDS.splice(posCoordsLength, POS_COORDS.length - posCoordsLength)
         quart3Coords = [];
         // Get rid of random deffects created by new coords transition
-        ctx.clearRect(0,0,canvas.width, canvas.height)
+        ctx.clearRect(0, 0, canvas.width, canvas.height)
         console.log('Reset patternu numer 3')
-        proceduralSouthEastPattern(ctx, canvas, firstPos)
     }
-
     // Recursion conditiom
     if (POS_COORDS[POS_COORDS.length - 1][0] >= canvas.width / 2 && POS_COORDS.length < posCoordsLength + 18) {
         proceduralSouthEastPattern(ctx, canvas, firstPos)
     }
     return quart3Coords
-}
- /** SOUTH WEST PATTERN */
-const proceduralSouthWestPattern = (ctx, canvas, firstPos) => {
+}// END OF SOUTH EAST PATTERN
+
+/** SOUTH WEST PATTERN */
+const proceduralSouthWestPattern = (ctx, canvas) => {
     if (quart4Coords.length === 0) {
-        console.log(quart3Coords[quart3Coords.length-1])
-        element42Counter,element7Counter,element32Counter,element8Counter,element5Counter,element6Counter,element11Counter, element12Counter, element22Counter = 0;
+        element42Counter, element7Counter, element32Counter, element8Counter, element5Counter, element6Counter, element11Counter, element12Counter, element22Counter = 0;
         posCoordsLength = POS_COORDS.length;
-        rollNewElement(quart3Coords[quart3Coords.length-1],quart4Coords)
-        matchElements(ctx, POS_COORDS, quart4Coords[quart4Coords.length - 1], quart3Coords[quart3Coords.length - 1], POS_COORDS[POS_COORDS.length - 1][0], POS_COORDS[POS_COORDS.length - 1][1])
+        rollNewPatternElement(quart3Coords[quart3Coords.length - 1], quart4Coords)
+        createPositionOfPatternElement(ctx, POS_COORDS, quart4Coords[quart4Coords.length - 1], quart3Coords[quart3Coords.length - 1], POS_COORDS[POS_COORDS.length - 1][0], POS_COORDS[POS_COORDS.length - 1][1])
     }
     const previousElement = quart4Coords[quart4Coords.length - 1]
-    rollNewElement(previousElement, quart4Coords)
+    rollNewPatternElement(previousElement, quart4Coords)
     if (quart4Coords[quart4Coords.length - 1] === 32) {
         element32Counter++;
-    }else if (quart4Coords[quart4Coords.length - 1] === 21) {
+    } else if (quart4Coords[quart4Coords.length - 1] === 21) {
         element21Counter++;
-    }else if (quart4Coords[quart4Coords.length - 1] === 6) {
+    } else if (quart4Coords[quart4Coords.length - 1] === 6) {
         element6Counter++;
     }
-    matchElements(ctx, POS_COORDS, quart4Coords[quart4Coords.length - 1], quart4Coords[quart4Coords.length - 2], POS_COORDS[POS_COORDS.length - 1][0], POS_COORDS[POS_COORDS.length - 1][1])
+    createPositionOfPatternElement(ctx, POS_COORDS, quart4Coords[quart4Coords.length - 1], quart4Coords[quart4Coords.length - 2], POS_COORDS[POS_COORDS.length - 1][0], POS_COORDS[POS_COORDS.length - 1][1])
     if (element32Counter >= 0 && quart4Coords[quart4Coords.length - 1] === 32) {
-        quart4Coords.pop();
-        POS_COORDS.pop();
-        proceduralSouthEastPattern(ctx, canvas, firstPos)
-    }else if (element21Counter >= 0 && quart4Coords[quart4Coords.length - 1] === 21) {
-        quart4Coords.pop();
-        POS_COORDS.pop();
-        proceduralSouthEastPattern(ctx, canvas, firstPos)
-    }else if (element6Counter >= 0 && quart4Coords[quart4Coords.length - 1] === 6) {
-        quart4Coords.pop();
-        POS_COORDS.pop();
-        proceduralSouthEastPattern(ctx, canvas, firstPos)
+        getRidOfLastPatternElement(quart4Coords)
+        proceduralSouthWestPattern(ctx, canvas)
+    } else if (element21Counter >= 0 && quart4Coords[quart4Coords.length - 1] === 21) {
+        getRidOfLastPatternElement(quart4Coords)
+        proceduralSouthWestPattern(ctx, canvas)
+    } else if (element6Counter >= 0 && quart4Coords[quart4Coords.length - 1] === 6) {
+        getRidOfLastPatternElement(quart4Coords)
+        proceduralSouthWestPattern(ctx, canvas)
     }
-
     // If one element of pattern is not allowed, reset this func
-    if (POS_COORDS[POS_COORDS.length - 1][1] + radius > canvas.height  || POS_COORDS[POS_COORDS.length - 1][0] >= canvas.width/2 || POS_COORDS[POS_COORDS.length - 1][0] + radius/2 <= 0 || POS_COORDS[POS_COORDS.length - 1][1] <= canvas.height/2 + radius/2 || POS_COORDS[POS_COORDS.length - 1][1] < POS_COORDS[0][1]) {
+    if (POS_COORDS[POS_COORDS.length - 1][1] + radius > canvas.height || POS_COORDS[POS_COORDS.length - 1][0] >= canvas.width / 2 || POS_COORDS[POS_COORDS.length - 1][0] + radius / 2 <= 0 || POS_COORDS[POS_COORDS.length - 1][1] <= canvas.height / 2 + radius / 2 || POS_COORDS[POS_COORDS.length - 1][1] < POS_COORDS[0][1]) {
         POS_COORDS.splice(posCoordsLength, POS_COORDS.length - posCoordsLength)
         quart4Coords = [];
         // Get rid of random deffects created by new coords transition
-        ctx.clearRect(0,0,canvas.width, canvas.height)
+        ctx.clearRect(0, 0, canvas.width, canvas.height)
         console.log('Reset patternu numer 4')
-        proceduralSouthWestPattern(ctx, canvas, firstPos)
     }
-
     // Recursion conditiom
     //if (POS_COORDS[POS_COORDS.length - 1][1] - radius/2 >= canvas.height / 2 && POS_COORDS.length < posCoordsLength + 18) {
-        if (!(POS_COORDS[POS_COORDS.length-1][0] === POS_COORDS[0][0] && POS_COORDS[POS_COORDS.length-1][1] - radius=== POS_COORDS[0][1]) && POS_COORDS.length < posCoordsLength + 16) {
-        proceduralSouthWestPattern(ctx, canvas, firstPos)
-    }else{
-        if (POS_COORDS[POS_COORDS.length-1][0] !== POS_COORDS[0][0] && POS_COORDS[POS_COORDS.length-1][1] - radius!== POS_COORDS[0][1]) {
+    if (!(POS_COORDS[POS_COORDS.length - 1][0] === POS_COORDS[0][0] && POS_COORDS[POS_COORDS.length - 1][1] - radius === POS_COORDS[0][1]) && POS_COORDS.length < posCoordsLength + 9) {
+        proceduralSouthWestPattern(ctx, canvas)
+    } else {
+        if (POS_COORDS[POS_COORDS.length - 1][0] !== POS_COORDS[0][0] && POS_COORDS[POS_COORDS.length - 1][1] - radius !== POS_COORDS[0][1]) {
             POS_COORDS.splice(posCoordsLength, POS_COORDS.length - posCoordsLength)
-        quart4Coords = [];
-        // Get rid of random deffects created by new coords transition
-        ctx.clearRect(0,0,canvas.width, canvas.height)
-        console.log('Reset patternu numer 4 ten popzniejszy')
-        proceduralSouthWestPattern(ctx, canvas, firstPos)
+            quart4Coords = [];
+            // Get rid of random deffects created by new coords transition
+            ctx.clearRect(0, 0, canvas.width, canvas.height)
+            console.log('Reset patternu numer 4 ten pozniejszy')
+            proceduralSouthWestPattern(ctx, canvas)
         }
-        
     }
-    //console.log(quart4Coords)
+    console.log(quart4Coords)
     return quart4Coords
-}
+}// END OF SOUTH WEST PATTERN
 
 export const createPattern = (ctx, canvas, firstPos) => {
     let resultArr = [];
-    /*const promise = new Promise((resolve, reject)=> {
-        resultArr = [...proceduralQuartPattern(ctx, canvas, firstPos)]
-        resolve(resultArr)
-    })
-
-    promise.then((val) => {
-        resultArr = [...val, ...proceduralNorthEastPattern(ctx, canvas, firstPos)]
-    })
-    .then((val) => {
-        resultArr = [...resultArr, ...proceduralSouthEastPattern(ctx, canvas, firstPos)]
-    })
-    .then((val)=> {
-        resultArr = [...resultArr, ...proceduralSouthWestPattern(ctx, canvas, firstPos)]
-        return resultArr;
-    })*/
-    resultArr = [...proceduralQuartPattern(ctx, canvas, firstPos)]
-    resultArr = [...resultArr, ...proceduralNorthEastPattern(ctx, canvas, firstPos)]
-    resultArr = [...resultArr, ...proceduralSouthEastPattern(ctx, canvas, firstPos)]
-    resultArr = [...resultArr, ...proceduralSouthWestPattern(ctx, canvas, firstPos)]
+    resultArr = [
+        ...proceduralNorthWestPattern(ctx, canvas, firstPos), // NORTH WEST QUARTER OF MAP
+        ...proceduralNorthEastPattern(ctx, canvas, firstPos), // NORTH EAST QUARTER OF MAP
+        ...proceduralSouthEastPattern(ctx, canvas, firstPos), // SOUTH EAST QUARTER OF MAP
+        ...proceduralSouthWestPattern(ctx, canvas), // SOUTH WEST QUARTER OF MAP
+    ]
     console.log(resultArr);
     return resultArr;
 }
