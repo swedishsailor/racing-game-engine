@@ -199,8 +199,6 @@ var player = new carClass();
 // function which initially runs only after all the code has loaded into memory
 window.onload = function () {
     canvas = document.getElementById("myCanvas");
-    canvas.width = 1600;
-    canvas.height = 850;
     ctx = canvas.getContext("2d");
     ctx.font = "30px Arial";
 
