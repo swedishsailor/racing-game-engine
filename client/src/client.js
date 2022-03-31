@@ -317,7 +317,14 @@ setTimeout(() => {
 
     //drawMap(ctx, proceduralPattern(8), rollFirstPoint(canvas), 100);
     const firstPoint = rollFirstPoint(canvas);
-    const pattern = createPattern(ctx, canvas, firstPoint);
+    let pattern = createPattern(ctx, canvas, firstPoint);
+    if(pattern === [8, 31, 5, 5, 11, 31, 5, 5, 5, 41, 12, 7, 7, 32, 12, 22, 42, 7, 22] || 
+        pattern ===[8, 31, 5, 11, 31, 5, 5, 5, 41, 6, 12, 7, 7, 22, 42, 22, 31, 41, 6, 6, 12, 7, 7]||
+        pattern  === [8, 31, 5, 5, 11, 31, 41, 6, 6, 12, 22, 42, 22, 31] ||
+        pattern === [8, 31, 5, 5, 5, 11, 31, 5, 5, 41, 6, 12, 7, 22, 42, 32, 12, 7, 7, 32] ||
+        pattern === [8, 31, 5, 5, 5, 11, 31, 5, 41, 21, 41, 12, 22, 42, 7, 7, 7, 32, 12, 32]){
+        pattern = createPattern(ctx, canvas, firstPoint);
+    }
     drawMap(ctx, pattern, firstPoint, 110);
 
     calculateMapHitboxes(ctx);
