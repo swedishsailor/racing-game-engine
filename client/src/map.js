@@ -528,7 +528,7 @@ export function drawMap(ctx, pattern, firstElemPos, lineWidth) {
             }
         }
     }
-    console.log(coords)
+   // console.log(coords)
 }
 
 // Show the visual representation of ingame map hitboxes

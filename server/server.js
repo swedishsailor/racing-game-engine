@@ -82,3 +82,9 @@ server.on('error', (err) => {
 });
 
 server.listen(7171); 
+
+process.on('SIGINT', () => {
+  console.log( "Shutting down server" );
+  process.exit(0);
+})
+

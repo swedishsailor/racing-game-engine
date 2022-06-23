@@ -6,6 +6,8 @@ const ONE_SECOND = 1000;
 
 var canvas;
 var ctx;
+var firstPoint;
+var pattern;
 var socketId;
 var enemyPlayers = {};
 var playerMessages = {};
@@ -183,6 +185,7 @@ var bitmapImageList =
         { varName: carImage2, imageSource: "../img/f2.png" },
     ];
 
+
 // function which handles loading of all graphic images in a list
 function loadAllBitmapGraphics(bitmapList) {
     for (var i = 0; i < bitmapList.length; i++) {
@@ -198,10 +201,12 @@ var player = new carClass();
 
 // function which initially runs only after all the code has loaded into memory
 window.onload = function () {
+
     canvas = document.getElementById("myCanvas");
     ctx = canvas.getContext("2d");
     ctx.font = "30px Arial";
-
+    firstPoint = rollFirstPoint(canvas);
+    pattern = createPattern(ctx, canvas, firstPoint);
     var playerText = document.getElementById("playerText")
     // calls our function to run at 30 fps
     var framesPerSecond = 60;
@@ -236,13 +241,23 @@ function colRowToArrayIndex(col, row) {
     return col + TRACK_COLUMNS * row;
 }
 
+
+function drawFullMap() {
+
+    drawMap(ctx, pattern, firstPoint, 110);
+    //jak to uwalniam to cos sie dzieje zlego
+    //calculateMapHitboxes(ctx);
+}
+
 function drawAllElements() {
     ctx.save();
-    //ctx.clearRect(0, 0, canvas.width, canvas.height);  PAMIETAJ O TYM
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawFullMap();
     player.drawCar();
 
     //draw all enemies
-    for (enemy in enemyPlayers) {
+    for (var enemy in enemyPlayers) {
         enemyPlayers[enemy].drawCar();
     }
 
@@ -286,6 +301,7 @@ function makeCenteredImageRotate(myImage, posX, posY, atAngle) {
         enemyPlayers[id] = enemyPlayer;
         enemyPlayers[id].spawnCar(carImage2, "Enemy");
         enemyPlayers[id].setCarVariables(50, 50, 0);
+        console.log(enemyPlayer);
     });
 
     sock.on('enemyPlayerInfo', ({ x, y, a, myId }) => {
@@ -311,15 +327,4 @@ export const drawCircle = (x, y, radius, startAngle, rotation) => {
     ctx.stroke();
 }
 
-const pattern = [41, 21, 5, 41, 21, 5, 5, 5, 5, 5, 11, 31, 5, 5, 5, 5, 5, 5, 5, 5, 41, 6, 6, 6, 21, 41, 12, 7, 7, 7, 7, 7, 22, 42, 7, 7, 7, 7, 32, 6, 6, 6, 21, 41, 6]
-setTimeout(() => {
-    //drawMap(ctx, proceduralQuartPattern(canvas, 'quart1',10), rollFirstPoint(canvas), 100)
 
-    //drawMap(ctx, proceduralPattern(8), rollFirstPoint(canvas), 100);
-    const firstPoint = rollFirstPoint(canvas);
-    let pattern = createPattern(ctx, canvas, firstPoint);
-
-    drawMap(ctx, pattern, firstPoint, 110);
-
-    calculateMapHitboxes(ctx);
-}, 0)
