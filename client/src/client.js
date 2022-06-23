@@ -56,6 +56,7 @@ function carClass() {
     this.y = 50;
     this.carAngle = 0;
     this.car_speed = 0;
+    this.licznik = 0;
     
     // keyHeldDown variables with booleans
     this.keyHeldDown_Forward = false;
@@ -92,6 +93,7 @@ function carClass() {
     
         if(this.keyHeldDown_Forward) {
             this.car_speed += FORWARD_RATE;
+
         }
         if(this.keyHeldDown_Reverse) {
             this.car_speed -= REVERSE_RATE;
@@ -106,11 +108,12 @@ function carClass() {
         }
         this.x += Math.cos(this.carAngle) * this.car_speed;
         this.y += Math.sin(this.carAngle) * this.car_speed;
-        sendPlayerInfoToServer(this.x, this.y, this.carAngle);
+        //sendPlayerInfoToServer(this.x, this.y, this.carAngle);
     };
  
-    function sendPlayerInfoToServer(x,y,a) {
-        sock.emit('PlayerInfo',{ x, y, a});
+    this.sendPlayerInfoToServer = function(forward,reverse,right, left) {
+        sock.emit('PlayerInputInfo', {forward, reverse, right, left});
+        //sock.emit('PlayerInfo',{ x, y, a});
     }
 
     
@@ -131,34 +134,74 @@ const ARROW_KEY_RIGHT = 39;
 const ARROW_KEY_LEFT = 37;
 
 // function to actually set up control keys for each car
-function carControlKeySetup(keyEvent, whichCar, bindToThisKey) {
-    if(keyEvent.keyCode === whichCar.controlKeyForward) {
-        whichCar.keyHeldDown_Forward = bindToThisKey;
+function carControlKeySetup(keyEvent, bindToThisKey) {
+    console.log("nacisnalem albo puscilem");
+    if(keyEvent.keyCode === player.controlKeyForward) {
+        player.keyHeldDown_Forward = bindToThisKey;
     }
-    if(keyEvent.keyCode === whichCar.controlKeyReverse) {
-        whichCar.keyHeldDown_Reverse = bindToThisKey;
+    if(keyEvent.keyCode === player.controlKeyReverse) {
+        player.keyHeldDown_Reverse = bindToThisKey;
     }
-    if(keyEvent.keyCode === whichCar.controlKeyRight) {
-        whichCar.keyHeldDown_Right = bindToThisKey;
+    if(keyEvent.keyCode === player.controlKeyRight) {
+        player.keyHeldDown_Right = bindToThisKey;
     }
-    if(keyEvent.keyCode === whichCar.controlKeyLeft) {
-        whichCar.keyHeldDown_Left = bindToThisKey;
+    if(keyEvent.keyCode === player.controlKeyLeft) {
+        player.keyHeldDown_Left = bindToThisKey;
     }
+    keys = [player.keyHeldDown_Forward, 
+        player.keyHeldDown_Reverse, 
+        player.keyHeldDown_Right,  
+        player.keyHeldDown_Left]
+    console.log(player.x, player.y, player.carAngle)
+    player.sendPlayerInfoToServer(keys[0], keys[1], keys[2], keys[3])
 }
 
+var forward = false;
+var reverse = false;
+var right = false;
+var left = false;
 // function runs when we press and hold a key down
 function keyIsPressed(keyEvent) {
+    console.log(forward, reverse, right, left)
+    if((keyEvent.keyCode == ARROW_KEY_UP & !forward) ||
+    (keyEvent.keyCode == ARROW_KEY_DOWN & !reverse) ||
+    (keyEvent.keyCode == ARROW_KEY_RIGHT & !right) ||
+    (keyEvent.keyCode == ARROW_KEY_LEFT & !left)) {
     //console.log("Key Pressed: " + keyEvent.keyCode);
-    carControlKeySetup(keyEvent, player, true);
+        carControlKeySetup(keyEvent, true);
+    }
+    if(keyEvent.keyCode == ARROW_KEY_UP){
+        forward = true;
+    }
+    if(keyEvent.keyCode == ARROW_KEY_DOWN){
+        reverse = true;
+    }
+    if(keyEvent.keyCode == ARROW_KEY_RIGHT){
+        right = true;
+    }
+    if(keyEvent.keyCode == ARROW_KEY_LEFT){
+        left = true;
+    }
     
    //możliwe ze bedzie trzeba handlowac jakos pisanie lepiej
    //bo moze kolidowac ze sterowaniem tutaj ale zobaczymy
 }
-
 // function runs when we release a key that was held down
 function keyIsLetUp(keyEvent) {
     //console.log("Key Released: " + keyEvent.keyCode);
-    carControlKeySetup(keyEvent, player, false);
+    if(keyEvent.keyCode == ARROW_KEY_UP){
+        forward = false;
+    }
+    if(keyEvent.keyCode == ARROW_KEY_DOWN){
+        reverse = false;
+    }
+    if(keyEvent.keyCode == ARROW_KEY_RIGHT){
+        right = false;
+    }
+    if(keyEvent.keyCode == ARROW_KEY_LEFT){
+        left = false;
+    }
+    carControlKeySetup(keyEvent, false);
 }
 
 function sendMessageToAll() {
