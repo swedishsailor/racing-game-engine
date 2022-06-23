@@ -1,7 +1,7 @@
 const http = require('http');
 const express = require('express');
 const socketio = require('socket.io');
-
+const {carClass} = require('./player.js');
 const app = express();
 const clientPath = `${__dirname}/../client`;
 
@@ -36,8 +36,12 @@ io.on('connection', (sock) => {
   sock.emit('message', 'You are connected');
   //przesylamy id klienta do niego
   sock.emit('id', sock.id);
-  //zapisujemy klienta na serwerze po id
-  clients[sock.id] = sock;
+
+  //zapisujemy klienta na serwerze po id i tworzymy mu instancje serwerowa +  
+  var player = new carClass(); 
+  var xd = 0; 
+  clients[sock.id] = player; 
+  clients[sock.id].sock = sock;
   
   //wysylamy info do kazdego innego oprocz nas, ze dolaczylismy
   //a do siebie wysylamy info o kazdym juz istniejacym
@@ -57,6 +61,25 @@ io.on('connection', (sock) => {
         clients[id].emit('enemyPlayerInfo', ({x, y, a, myId}));
       }
     }
+  })
+
+  sock.on('PlayerInputInfo', ({forward, reverse, right, left}) => {
+    var myId = sock.id;
+    //wyslij do do kazdego oprocz tego gracza
+    //serwer kalkuluje pozycje gracza po inputach
+    console.log(forward,reverse,right,left)
+    clients[sock.id].setPressedKeys(forward,reverse, right, left)
+    clients[sock.id].calculateNextCarPosition()
+    console.log(clients[sock.id].licznik)
+    clients[sock.id].licznik++
+    playerinfo = clients[sock.id].getPlayerInfo();
+    console.log(playerinfo)
+    sock.emit('message', 'You are connected');
+    // for ( var id in clients) {
+    //   if(id != sock.id){
+    //     clients[id].emit('enemyPlayerInfo', ({x, y, a, myId}));
+    //   }
+    // }
   })
 
   sock.on('playerMessage', (message) => {
@@ -82,3 +105,13 @@ server.on('error', (err) => {
 });
 
 server.listen(7171, "0.0.0.0"); 
+
+var framesPerSecond = 60;
+
+setInterval(function() {
+  Object.entries(clients).forEach(([sockID, clientPlayer]) => {
+    clientPlayer.calculateNextCarPosition()
+   // console.log(value.x)
+  });
+
+  }, 1000 / framesPerSecond); 
