@@ -1,6 +1,6 @@
 <!-- HTML code for racing game -->
-<h1>KRZYKAM Car Game </h1>
-<canvas id="myCanvas" width="1500" height="800">
+<h1 style="margin:0;">KRZYKAM Car Game </h1>
+<canvas id="myCanvas" width="1600" height="820">
 Sorry, the web browser you are using doesn't support canvas elements!
 </canvas>
 
@@ -8,9 +8,12 @@ Sorry, the web browser you are using doesn't support canvas elements!
 <button  onclick="sendMessageToAll()">Say</button>
 
 <script src="/socket.io/socket.io.js"></script>
-<script src="src/client.js"></script>
+<script type="module" src="src/client.js"></script>
 <style>
 canvas {
     border: 3px dotted black;
+  }
+  html{
+    background: rgb(61, 61, 61);
   }
 </style>
